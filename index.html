@@ -1,12 +1,19 @@
 ---
 bg: "rails.jpg"
 layout: default
-crawlertitle: "Jekyll blog"
-title: "Voyager"
-summary: "main page"
+crawlertitle: "Tâm Le Minh - Software Engineer"
+title: "Tâm Le Minh"
+summary: "Software Engineer"
 ---
 
-{% for post in site.posts limit: 5 %}
+<h1>Welcome!</h1>
+
+I, my name is Tâm Le Minh. I am a Software Engineer based in Stuttgart, Germany. 
+I am using this website to share about my favourite projects. You can check them out in the 
+Projects section. I hope you enjoy them! Also, you can find more info about me in the About 
+section. 
+
+{% for post in site.posts %}
   <article class="index-page">
     <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
     {{ post.excerpt }}

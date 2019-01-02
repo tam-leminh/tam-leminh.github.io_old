@@ -256,3 +256,26 @@ a img {
   cursor: -webkit-zoom-in;
   cursor: zoom-in;
 }
+
+img.project-round {
+    overflow:hidden;
+    -webkit-border-radius:100px;
+    -moz-border-radius:100px;
+    border-radius:400px;    
+    width:180px;
+    height:180px;
+	margin:20px 20px 10px 20px;
+	cursor:default;
+	border: 1px solid grey;
+}
+
+img.latex-inline {
+	display: inline-block;
+	margin:0px;
+	cursor:default;
+	vertical-align: -0.3em;
+}
+
+.inline-block {
+   display: inline-block;
+}

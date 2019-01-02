@@ -1,6 +1,8 @@
-## Voyager
+# My website
 
-Just another jekyll theme. Demo: <http://redvi.github.io/voyager>
+## Theme
+
+Voyager by redVi. Demo: <http://redvi.github.io/voyager>
 
 ### Feathures:
 
@@ -66,8 +68,3 @@ If your blog is not in the root directory, you can include images with a relativ
 ![my_image]({{ site.images | relative_url }}/image.jpg)
 ```
 
-## Production environment
-
-Build for production:
-
-`JEKYLL_ENV=production jekyll build`

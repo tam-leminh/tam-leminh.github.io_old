@@ -62,21 +62,23 @@
   function toggleImages() {
     [].forEach.call(images, function(img) {
       img.addEventListener('click', function(event) {
-        event.preventDefault();
-        img.classList.toggle('img-popup');
-        if (img.classList.contains('img-popup')) {
-          img.style.cursor = 'zoom-out';
-          img.style.maxHeight = imageHeight + 'px';
-          img.style.marginLeft = '-' + (img.offsetWidth / 2) + 'px';
-          img.style.marginTop = '-' + (img.offsetHeight / 2) + 'px';
-          shadow.style.display = 'block';
-        } else {
-          img.style.cursor = 'zoom-in';
-          img.style.maxHeight = '100%';
-          img.style.marginLeft = 'auto';
-          img.style.marginTop = 'auto';
-          shadow.style.display = 'none';
-        }
+		if (!img.classList.contains('project-round')) {
+          event.preventDefault();
+          img.classList.toggle('img-popup');
+          if (img.classList.contains('img-popup')) {
+            img.style.cursor = 'zoom-out';
+            img.style.maxHeight = imageHeight + 'px';
+            img.style.marginLeft = '-' + (img.offsetWidth / 2) + 'px';
+            img.style.marginTop = '-' + (img.offsetHeight / 2) + 'px';
+            shadow.style.display = 'block';
+          } else {
+            img.style.cursor = 'zoom-in';
+            img.style.maxHeight = '100%';
+            img.style.marginLeft = 'auto';
+            img.style.marginTop = 'auto';
+            shadow.style.display = 'none';
+          }
+		}
       });
     });
   }

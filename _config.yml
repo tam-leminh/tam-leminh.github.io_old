@@ -6,17 +6,16 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: Your awesome title
-email: your-email@domain.com
+title: Tâm Le Minh
+email: tam.leminh@laposte.net
 description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  Website of Tâm Le Minh, software engineer in Stuttgart, Germany. 
+  Projects in Software and Machine Learning.
 baseurl: "" # the subpath of your site, e.g. /blog
 lang: "en"
 url: "http://localhost:4000" # the base hostname & protocol for your site
-twitter_username: jekyllrb
-github_username:  jekyll
+twitter_username: 
+github_username:  tam-leminh
 disqus_username:
 
 # Build settings
@@ -42,3 +41,6 @@ sass:
 
 
 images: '/assets/images'
+
+plugins: 
+  - jekyll-pseudocode-b
