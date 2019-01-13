@@ -8,11 +8,9 @@ summary: "About this blog"
 active: about
 ---
 
-## Experience
+## Activity
 
 - Since 2017: **Software Engineer**, *Thales Alenia Space*, Ditzingen, Germany
-
-## Education
 
 - 2013-2017: **Diplôme d'Ingénieur** (eq. MSc), *ISAE-SUPAERO*, Toulouse, France  
 Major: *Computer Science and Autonomous Systems*  
