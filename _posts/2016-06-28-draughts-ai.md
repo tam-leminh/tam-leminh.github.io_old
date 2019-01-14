@@ -18,6 +18,8 @@ since 1984. In what is considered a milestone in the history of AI, the supercom
 regular 6-game match. Though the match was close, this was the first time AI topped the world champion in Chess, a 
 game considered to be unsolvable.
 
+## AI in board games
+
 Indeed, different algorithms and techniques exist for different games. In Tic-tac-toe, all the possibilities can be 
 easily explored by sheer force: we can simply compute all the possible configurations and sequences and order them in 
 a tree. Then it can be showed that an optimal player 2 can force the draw, whatever player 1 does. Therefore any game 
@@ -61,3 +63,81 @@ For each moves, it computes the next position,
 - the AI algorithm, which evaluates the best move for a player.
 The user can choose to play without AI (e.g. against another player), to play against an AI bot or to make two AI bots play 
 against each other.
+
+## AI principles
+
+At each turn, the algorithm should determine the best move to play for the selected player. It relies on a game 
+tree where the nodes are game states $$s$$. In Checkers or Chess, a state can be represented by a configuration of pieces, 
+but also the next player to play. At one particular state of the game, each possible $$a \in A_s$$ move leads to a new state 
+$$s' \in S_s$$ (the subscripts denote that these are the set of actions and sets accessible from the state $$s$$), i.e. it's 
+an edge leading to a new node. Let $$a(s,s')$$ be such a move. The root of the tree is the node representing the current 
+state. Therefore, each layer in the tree represent one move. The root is the layer 0. For example, one can list all the nodes 
+in the layer 2 to know all the possible configurations after 2 moves. Let $$S_i$$ be the set of all possible states after $$i$$ 
+moves, or all the states of the $$i$$-th layer. Note that within one layer, there could be several nodes representing the same state 
+as different Also, because the players alternate turns and there is only one move allowed per turn, each layer represent a turn. 
+Thus, one layer could represent player 1's turn, then the next layer would represent player 2's, etc. A branch of the tree is 
+ended only when the game ends, i.e. the leafs are checkmate or stalemate states. 
+
+Let's consider that the algorithm plays as player 1. Then, each decision/move should be associated with a value $$Q(a)$$, measure of its 
+quality. Now, Checkers are a zero-sum game. That means for one player, a good situation for is equally good for them than bad 
+for their opponent. For player 1, for one particular move $$a_t$$, the value $$Q_1(a_t)$$ gets as high as their opponent's $$Q_2(a_t)$$ 
+gets low. Each player looks to maximize its own values $$Q$$: I hope to play the best move and I hope my opponent plays as poorly as 
+possible. This is equivalent to saying that player 1 wants to maximize $$Q$$ whereas player 2 wants to minimize it. The minimax 
+algorithm is based on this idea. Now for simplicity, instead of reasoning in actions and states, we can take advantage of the tree and 
+use nodes and layers. Each node $$X$$ corresponds to a state $$s$$. It has $$n_X$$ children nodes $$X_i \in (X_i)_{i \in [1,n_X]}$$, each 
+associated to a state $$s_i$$ by an action $$a(s,s_i) \in A_{s}$$. Let $$V_l$$ be a score value for the nodes of the $$l$$-th 
+layer, such as if $$X_i$$ is in the $$l$$-th layer, $$V_l(X_i) = Q(a(s,s_i))$$.
+
+How can we calculate $$V_l$$? 
+
+### Picking the best move
+
+First, let's suppose that we can evaluate the quality of a state $$s$$. This is modelled with an evaluation function $$f$$. A higher 
+$$f(s)$$ means the more favourable to us. Inversely, it is lower when the state is worse. Because each node $$X$$ is associated with a 
+state $$s$$, we can write $$f(X) = f(s)$$.
+
+At the root node $$X_{root}$$, player 1 plays. They can select the move that leads to the node $$X_{max}$$ where the value of $$f$$ 
+is the highest, i.e. $$X_{max} = \arg \max{i \in [1,n_X_{root}]} V_1(X_i) = f(X_i)$$. However this is a short-sighted strategy. 
+Indeed, in this case, only the next move is evaluated. Maybe this can allow player 2 to react with an even better move, that 
+will eventually put player 1 in an awful situation. Perhaps there are poor moves in the short-term, sacrificing pieces for example, 
+but would result in a better position several turns ahead. For an analogy in Chess, a good move when considering only one turn 
+ahead but bad when considering 2 turns, could be to capture a defended pawn with a rook, because then the rook would be captured 
+itself in the next turn. So a following this approach, we should also check the opponent's possibilities. Hence, we cannot just 
+straightforwardly use the function f. We would rather define 
+$$X_{max}$$ such as $$X_{max} = \arg \max{i \in [1,n_X_{root}]} V_1(X_i)$$ where $$V_1$$ is now 
+$$V_1(X) = \min{i \in [1,n_X]} V_2(X_i) = f(X_i)$$. That means, we consider the strongest reaction the opponent can throw after 
+each of our possible move, and we choose the move where this optimal reaction is the weakest. In other words, we are preventing 
+them as much as possible to play the best moves.
+
+Layer after layer, we can continue to look forward and plan more moves. In an opening or midgame scenario, it's impossible to 
+to build the complete tree due to the overwhelming large number of possibilities. Therefore, we must define a tree depth corresponding 
+to the number of moves we want to plan. An larger tree depth means better moves, but the computational effort required also increases 
+exponentially. The previous problem can be generalized for L layers:
+Define V_L(X) = f(X)
+For all $$l \in [1, L-1]$$, $$
+  \begin{equation}
+    V_l(X) = 
+    \begin{cases}
+      \max{i \in [1,n_X]} V_{l+1}(X_i), & \text{if}\ l \in 2\mathbb{N} \\
+      \min{i \in [1,n_X]} V_{l+1}(X_i), & \text{if}\ l \in 2\mathbb{N} + 1
+    \end{cases}
+  \end{equation}
+Pick $$X_{max} = \arg \max{i \in [1,n_X_{root}]} V_1(X_i)$$
+
+We observe that there are two kinds of layers. The ones where the player is playing (layers indexed by even numbers), so the 
+algorithm tries to maximize $$V$$, and the ones where the opponent is playing (layers indexed by odd numbers), so the algorithm 
+assume they want to minimize $$V$$. So the levels alternate between maximizing and minimizing steps.
+
+### Minimax algorithm
+
+For a fixed depth L, one way to solve the minimax problem is to evaluate all the nodes of the $$L$$-th layer, so calculate 
+$$V_L(X) = f(X)$$. Next, these values can be propagated upwards to $$V_{L-1}$$, $$V{L-2}$$, etc. maximizing or minimizing 
+the relevant values, until reaching $$V_1$$. However, in practice, this method is not efficient. The tree must be entirely 
+built and kept in the memory before starting to calculate the $$V$$ values. 
+
+Instead, the minimax algorithm computes and propagates the $$V$$ scores while exploring the tree. 
+
+
+### Alpha-beta pruning
+
+### Horizon effect
