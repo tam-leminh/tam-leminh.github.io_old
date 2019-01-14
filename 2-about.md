@@ -8,7 +8,7 @@ summary: "About this blog"
 active: about
 ---
 
-## Activity
+## CV
 
 - Since 2017: **Software Engineer**, *Thales Alenia Space*, Ditzingen, Germany
 
