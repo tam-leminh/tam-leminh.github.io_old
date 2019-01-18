@@ -24,8 +24,8 @@ Indeed, different algorithms and techniques exist for different games. In Tic-ta
 easily explored by sheer force: we can simply compute all the possible configurations and sequences and order them in 
 a tree. Then it can be showed that an optimal player 2 can force the draw, whatever player 1 does. Therefore any game 
 between two perfect players (playing with an optimal strategy) would result in a draw. In Chess, from the initial 
-position, 10^46 different configurations are reachable (Shannon). Taking into account the possible sequences to arrive 
-to these positions, Allis estimated the game-tree complexity to be around 10^123. For such an amount of possibities, 
+position, $$10^{46}$$ different configurations are reachable (Shannon). Taking into account the possible sequences to arrive 
+to these positions, Allis estimated the game-tree complexity to be around $$10^{123}$$. For such an amount of possibities, 
 computation by sheer force is not possible. 
 
 Both Tic-tac-toe and Chess are games with complete information. Both players have the same full information on the state 
@@ -39,9 +39,9 @@ reinforcement learning that we will not discuss in this post. Yet, AlphaGo and i
 extremely performant, having also bested Stockfish 8, one of the top Chess bots, in 2017.
 
 For Checkers, there are different variants of the game. In American Checkers (also called English Draughts) variant has 
-been weakly solved by Schaeffer with the bot Chinook in 2007. Although there are 10^20 possible configurations in total, 
+been weakly solved by Schaeffer with the bot Chinook in 2007. Although there are $$10^20$$ possible configurations in total, 
 Schaeffer proved that any opening would result in an endgame configuration involving less than 10 pieces. Then he explored 
-all these possible endgame configurations. After 18 years of computation, the Chinook finally learned the 10^14 endgame 
+all these possible endgame configurations. After 18 years of computation, the Chinook finally learned the $$10^14$$ endgame 
 possibilities and how to solve them.
 
 Now if we consider the International variant of Checkers, the rules are slightly different than the American version:
@@ -97,25 +97,25 @@ $$f(s)$$ means the more favourable to us. Inversely, it is lower when the state 
 state $$s$$, we can write $$f(X) = f(s)$$.
 
 At the root node $$X_{root}$$, player 1 plays. They can select the move that leads to the node $$X_{max}$$ where the value of $$f$$ 
-is the highest, i.e. $$X_{max} = \arg \max{i \in [1,n_X_{root}]} V_1(X_i) = f(X_i)$$. However this is a short-sighted strategy. 
+is the highest, i.e. $$X_{max} = \arg \max_{i \in [1,n_{Xroot}]}$$ $$ V_1(X_i) = f(X_i)$$. However this is a short-sighted strategy. 
 Indeed, in this case, only the next move is evaluated. Maybe this can allow player 2 to react with an even better move, that 
 will eventually put player 1 in an awful situation. Perhaps there are poor moves in the short-term, sacrificing pieces for example, 
 but would result in a better position several turns ahead. For an analogy in Chess, a good move when considering only one turn 
 ahead but bad when considering 2 turns, could be to capture a defended pawn with a rook, because then the rook would be captured 
 itself in the next turn. So a following this approach, we should also check the opponent's possibilities. Hence, we cannot just 
 straightforwardly use the function f. We would rather define 
-$$X_{max}$$ such as $$X_{max} = \arg \max{i \in [1,n_X_{root}]} V_1(X_i)$$ where $$V_1$$ is now 
-$$V_1(X) = \min{i \in [1,n_X]} V_2(X_i) = f(X_i)$$. That means, we consider the strongest reaction the opponent can throw after 
+$$X_{max}$$ such as $$X_{max} = \arg \max_{i \in [1,n_{Xroot}]} V_1(X_i)$$ where $$V_1$$ is now 
+$$V_1(X) = \min_{i \in [1,n_X]} V_2(X_i) = f(X_i)$$. That means, we consider the strongest reaction the opponent can throw after 
 each of our possible move, and we choose the move where this optimal reaction is the weakest. In other words, we are preventing 
 them as much as possible to play the best moves.
 
 Layer after layer, we can continue to look forward and plan more moves. In an opening or midgame scenario, it's impossible to 
 to build the complete tree due to the overwhelming large number of possibilities. Therefore, we must define a tree depth corresponding 
 to the number of moves we want to plan. An larger tree depth means better moves, but the computational effort required also increases 
-exponentially. The previous problem can be generalized for L layers:
+exponentially. The previous problem can be generalized for $$L$$ layers:
 Define $$V_L(X) = f(X)$$
-For l in [1,L-1]:
-	If l is even:$$
+For $$l \in [1,L-1]$$:
+	If $$l$$ is even:$$
 		\begin{equation}
 			V_l(X) = 
 			\begin{cases}
@@ -123,7 +123,7 @@ For l in [1,L-1]:
 				\max{i \in [1,n_X]} V_{l+1}(X_i), & \text{if} X has children 
 			\end{cases}
 		\end{equation}$$
-	if l is odd:$$
+	if $$l$$ is odd:$$
 		\begin{equation}
 			V_l(X) = 
 			\begin{cases}
@@ -132,7 +132,7 @@ For l in [1,L-1]:
 			\end{cases}
 		\end{equation}$$
 	
-Pick $$X_{max} = \arg \max{i \in [1,n_X_{root}]} V_1(X_i)$$
+Pick $$X_{max} = \arg \max_{i \in [1,n_{Xroot}]} V_1(X_i)$$
 
 We observe that there are two kinds of layers. The ones where the player is playing (layers indexed by even numbers), so the 
 algorithm tries to maximize $$V$$, and the ones where the opponent is playing (layers indexed by odd numbers), so the algorithm 
@@ -147,25 +147,37 @@ play, the player has won. So we can affect $$+ \infty$$.
 ### Minimax implementation
 
 For a fixed depth L, one way to solve the minimax problem is to evaluate all the nodes of the $$L$$-th layer, so calculate 
-$$V_L(X) = f(X)$$. Next, these values can be propagated upwards to $$V_{L-1}$$, $$V{L-2}$$, etc. maximizing or minimizing 
+$$V_L(X) = f(X)$$. Next, these values can be propagated upwards to $$V_{L-1}$$, $$V_{L-2}$$, etc. maximizing or minimizing 
 the relevant values, until reaching $$V_1$$. However, in practice, this method is not efficient. The tree must be entirely 
 built and kept in the memory before starting to calculate the $$V$$ values. 
 
 Instead, a recursive function can be used, taking advantage the minimax algorithm. In this case, it computes and propagates 
 the $$V$$ scores while exploring the tree.
-function Minimax(X):
-	if X is in L-th layer:
-		return f(X)
-	elif X is in a maximizing layer (l is even):
-		result := $$- \infty$$
-		for each child X_i:
-			result := max(result, Minimax(X_i))
-		return result
-	else:
-		result := $$+ \infty$$
-		for each child X_i:
-			result := min(result, Minimax(X_i))
-		return result
+
+function Minimax($$X$$):  
+&nbsp;&nbsp;&nbsp;&nbsp;if $$X$$ is in $$L$$-th layer:  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;return $$f(X)$$  
+&nbsp;&nbsp;&nbsp;&nbsp;elif $$X$$ is in a maximizing layer ($$l$$ is even):  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;result := $$- \infty$$  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;for each child $$X_i$$:  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;result := $$\max$$(result, Minimax($$X_i$$))  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;return result  
+&nbsp;&nbsp;&nbsp;&nbsp;else:  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;result := $$+ \infty$$  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;for each child $$X_i$$:  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;result := $$\min$$(result, Minimax($$X_i$$))  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;return result  
 
 This is a depth-first exploration: One branch is developed until the leaf, then the value of its predecessor is found evaluating 
 all its children. Then the value of this predecessor will be used to find the value of its own predecessor, etc.
@@ -176,28 +188,28 @@ The alpha-beta pruning can be used to optimize the minimax algorithm. Its purpos
 influence the decision. For this, during the tree search, two variables $$\alpha$$ and $$\beta$$ are used to store the minimum score 
 the player is currently assured to have and the maximum score the opponent is assured to have. It makes sense as the player wants 
 to maximize the value, they will not play any move scoring below $$\alpha$$ and as the opponent wants to minimize the value, 
-they will not play any move scoring above $$\beta$$. That means that when $$\alpha >= \beta$$, it's not worth exploring the rest 
+they will not play any move scoring above $$\beta$$. That means that when $$\alpha \geq \beta$$, it's not worth exploring the rest 
 of the branch anymore.
 
-function Minimax(X, $$\alpha$$, $$\beta$$):
-	if X is in L-th layer:
-		return f(X)
-	elif X is in a maximizing layer (l is even):
-		result := $$- \infty$$
-		for each child X_i:
-			result := max(result, Minimax(X_i, $$\alpha$$, $$\beta$$))
-			$$\alpha$$ := max($$\alpha$$, result)
-			if $$\alpha >= \beta$$:
-				break
-		return $$\alpha$$
-	else:
-		result := $$+ \infty$$
-		for each child X_i:
-			result := min(result, Minimax(X_i, $$\alpha$$, $$\beta$$))
-			$$\beta$$ := min($$\beta$$, result)
-			if $$\alpha >= \beta$$:
-				break
-		return $$\beta$$
+function Minimax($$X$$, $$\alpha$$, $$\beta$$):  
+&nbsp;&nbsp;&nbsp;&nbsp;if $$X$$ is in $$L$$-th layer:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $$f(X)$$  
+&nbsp;&nbsp;&nbsp;&nbsp;elif $$X$$ is in a maximizing layer ($$l$$ is even):  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$- \infty$$  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for each child $$X_i$$:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$\max$$(result, Minimax($$X_i$$, $$\alpha$$, $$\beta$$))  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$\alpha$$ := $$\max$$($$\alpha$$, result)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if $$\alpha \geq \beta$$:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $$\alpha$$  
+&nbsp;&nbsp;&nbsp;&nbsp;else:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$+ \infty$$  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for each child $$X_i$$:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$\min$$(result, Minimax($$X_i$$, $$\alpha$$, $$\beta$$))  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$\beta$$ := min($$\beta$$, result)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if $$\alpha \geq \beta$$:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $$\beta$$  
 
 ### Horizon effect
 
