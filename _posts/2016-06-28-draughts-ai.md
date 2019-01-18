@@ -90,7 +90,7 @@ layer, such as if $$X_i$$ is in the $$l$$-th layer, $$V_l(X_i) = Q(a(s,s_i))$$.
 
 How can we calculate $$V_l$$? 
 
-### Picking the best move
+### Minimax algorithm
 
 First, let's suppose that we can evaluate the quality of a state $$s$$. This is modelled with an evaluation function $$f$$. A higher 
 $$f(s)$$ means the more favourable to us. Inversely, it is lower when the state is worse. Because each node $$X$$ is associated with a 
@@ -113,31 +113,102 @@ Layer after layer, we can continue to look forward and plan more moves. In an op
 to build the complete tree due to the overwhelming large number of possibilities. Therefore, we must define a tree depth corresponding 
 to the number of moves we want to plan. An larger tree depth means better moves, but the computational effort required also increases 
 exponentially. The previous problem can be generalized for L layers:
-Define V_L(X) = f(X)
-For all $$l \in [1, L-1]$$, $$
-  \begin{equation}
-    V_l(X) = 
-    \begin{cases}
-      \max{i \in [1,n_X]} V_{l+1}(X_i), & \text{if}\ l \in 2\mathbb{N} \\
-      \min{i \in [1,n_X]} V_{l+1}(X_i), & \text{if}\ l \in 2\mathbb{N} + 1
-    \end{cases}
-  \end{equation}
+Define $$V_L(X) = f(X)$$
+For l in [1,L-1]:
+	If l is even:$$
+		\begin{equation}
+			V_l(X) = 
+			\begin{cases}
+				- \infty, & \text{if} X has no children \\
+				\max{i \in [1,n_X]} V_{l+1}(X_i), & \text{if} X has children 
+			\end{cases}
+		\end{equation}$$
+	if l is odd:$$
+		\begin{equation}
+			V_l(X) = 
+			\begin{cases}
+				+ \infty, & \text{if} X has no children \\
+				\min{i \in [1,n_X]} V_{l+1}(X_i), & \text{if} X has children 
+			\end{cases}
+		\end{equation}$$
+	
 Pick $$X_{max} = \arg \max{i \in [1,n_X_{root}]} V_1(X_i)$$
 
 We observe that there are two kinds of layers. The ones where the player is playing (layers indexed by even numbers), so the 
 algorithm tries to maximize $$V$$, and the ones where the opponent is playing (layers indexed by odd numbers), so the algorithm 
 assume they want to minimize $$V$$. So the levels alternate between maximizing and minimizing steps.
 
-### Minimax algorithm
+Also, before, we assumed that all the branches can be developed beyond the $$L$$-th layer. In practice, this is often true, 
+especially in start or mid game situations. However, in the case where there are winning or losing positions, the tree does not 
+develop further in the direction of the corresponding nodes. We can assume that when it's the player's turn and they have 
+possibilities, that means they have lost. So we can affect a $$- \infty$$ value to this node. If this is the opponent who cannot 
+play, the player has won. So we can affect $$+ \infty$$.
+
+### Minimax implementation
 
 For a fixed depth L, one way to solve the minimax problem is to evaluate all the nodes of the $$L$$-th layer, so calculate 
 $$V_L(X) = f(X)$$. Next, these values can be propagated upwards to $$V_{L-1}$$, $$V{L-2}$$, etc. maximizing or minimizing 
 the relevant values, until reaching $$V_1$$. However, in practice, this method is not efficient. The tree must be entirely 
 built and kept in the memory before starting to calculate the $$V$$ values. 
 
-Instead, the minimax algorithm computes and propagates the $$V$$ scores while exploring the tree. 
+Instead, a recursive function can be used, taking advantage the minimax algorithm. In this case, it computes and propagates 
+the $$V$$ scores while exploring the tree.
+function Minimax(X):
+	if X is in L-th layer:
+		return f(X)
+	elif X is in a maximizing layer (l is even):
+		result := $$- \infty$$
+		for each child X_i:
+			result := max(result, Minimax(X_i))
+		return result
+	else:
+		result := $$+ \infty$$
+		for each child X_i:
+			result := min(result, Minimax(X_i))
+		return result
 
+This is a depth-first exploration: One branch is developed until the leaf, then the value of its predecessor is found evaluating 
+all its children. Then the value of this predecessor will be used to find the value of its own predecessor, etc.
 
 ### Alpha-beta pruning
 
+The alpha-beta pruning can be used to optimize the minimax algorithm. Its purpose is to skip the branches of which we know will not 
+influence the decision. For this, during the tree search, two variables $$\alpha$$ and $$\beta$$ are used to store the minimum score 
+the player is currently assured to have and the maximum score the opponent is assured to have. It makes sense as the player wants 
+to maximize the value, they will not play any move scoring below $$\alpha$$ and as the opponent wants to minimize the value, 
+they will not play any move scoring above $$\beta$$. That means that when $$\alpha >= \beta$$, it's not worth exploring the rest 
+of the branch anymore.
+
+function Minimax(X, $$\alpha$$, $$\beta$$):
+	if X is in L-th layer:
+		return f(X)
+	elif X is in a maximizing layer (l is even):
+		result := $$- \infty$$
+		for each child X_i:
+			result := max(result, Minimax(X_i, $$\alpha$$, $$\beta$$))
+			$$\alpha$$ := max($$\alpha$$, result)
+			if $$\alpha >= \beta$$:
+				break
+		return $$\alpha$$
+	else:
+		result := $$+ \infty$$
+		for each child X_i:
+			result := min(result, Minimax(X_i, $$\alpha$$, $$\beta$$))
+			$$\beta$$ := min($$\beta$$, result)
+			if $$\alpha >= \beta$$:
+				break
+		return $$\beta$$
+
 ### Horizon effect
+
+However, there is a major flaw in the algorithm. Because of the fixed maximum depth of the tree, the algorithm can only plan 
+a certain number of moves forward. In games such as Checkers (or Chess, Go, etc.), there are moves that can drastically change 
+the situation (e.g. capture of a significant number of pieces). If a move of this kind appear to be possible immediately after 
+the maximum depth, the algorithm is not able to plan them. The algorithm would not be able to detect a catastrophic situation 
+that could happen right after, which makes it inefficient. This is called the horizon effect.
+
+This can be worked around by evaluating the quietness of a position. For example, we can suppose the position to 
+be noisy if there are possible captures, quiet otherwise. Then, on the last layer, the algorithm can continue to develop the tree 
+after the maximum depth, but only for the noisy positions, until all the leaves are quiet. Thus, for a small cost, the algorithm 
+can avoid obvious hidden traps that were beyond its vision (or horizon).
+
