@@ -18,6 +18,8 @@ since 1984. In what is considered a milestone in the history of AI, the supercom
 regular 6-game match. Though the match was close, this was the first time AI topped the world champion in Chess, a 
 game considered to be unsolvable.
 
+[![deepblue]({{ site.images | relative_url }}/deepblue.jpg)]({{ site.images | relative_url }}/deepblue.jpg)
+
 ## AI in board games
 
 Indeed, different algorithms and techniques exist for different games. In Tic-tac-toe, all the possibilities can be 
@@ -33,7 +35,9 @@ of the game. This is different from Poker or Bridge, where players don't know th
 don't know the cards in their opponents hands. Luck is also involved, so a player could play perfectly and still lose. 
 The usual approach is similar, but the algorithms also take probabilities and likelihood calculations into account.
 
-Also, DeepMind's AlphaGo became very famous after beating increasingly strong Go players and finally the World Champion 
+[![alphago]({{ site.images | relative_url }}/alphago.jpg)]({{ site.images | relative_url }}/alphago.jpg)
+
+DeepMind's AlphaGo became very famous after beating increasingly strong Go players and finally the World Champion 
 Ke Jie in 2017. AlphaGo's approach is different from classic techniques. It incorporates techniques of deep learning and 
 reinforcement learning that we will not discuss in this post. Yet, AlphaGo and its successor AlphaZero proved to be 
 extremely performant, having also bested Stockfish 8, one of the top Chess bots, in 2017.
@@ -49,13 +53,24 @@ Now if we consider the International variant of Checkers, the rules are slightly
 - the men (uncrowned pieces) can capture backwards,
 - the kings (crowned pieces) can "fly", i.e. they have unlimited range over unoccupied squares,
 - a move must capture the maximum number of pieces.
+
+<div style="text-align: center">
+<img src="/assets/images/damierinit.jpg" alt="damierinit" width="70%">
+<em>Initial position at International Checkers</em>
+</div>
+
 Not only there are even more possibilities, but also the gameplay is different from the American Version. Kings are 
 significantly stronger pieces, so promoting men becomes more important. With the capture constraint, one can set traps by 
 "offering" a piece to the opponent. The opponent is forced to capture the piece, even if it results in an eventually worse 
 position for him. 
 
-I designed and developed this International Checkers game with Matthieu Drouard, another ISAE-SUPAERO student. It was part 
-of our 1st-year research project, supervised by J.-M. Alliot. The application is programmed in C. There are three main 
+<div style="text-align: center">
+<img src="/assets/images/reglesprises.png" alt="reglesprises" width="100%">
+<em>Mandatory capture rules</em>
+</div>
+
+I designed and developed Draughts-AI, an International Checkers game with Matthieu Drouard, another ISAE-SUPAERO student. It was part 
+of our first-year research project, supervised by J.-M. Alliot. The game is programmed in C. There are three main 
 components:
 - the move generator, i.e. the engine of the game, including the rules. For each position, it computes the possible moves. 
 For each moves, it computes the next position,
@@ -63,6 +78,24 @@ For each moves, it computes the next position,
 - the AI algorithm, which evaluates the best move for a player.
 The user can choose to play without AI (e.g. against another player), to play against an AI bot or to make two AI bots play 
 against each other.
+
+<div style="text-align: center">
+<img src="/assets/images/scdepl.png" alt="scdepl" width="49%" class="inline-block">
+<img src="/assets/images/scdepldame.png" alt="scdepldame" width="49%" class="inline-block">
+<em>Possible moves highlighted in blue ([D] stands for the King piece, "Dame" in French)</em>
+</div>
+
+<div style="text-align: center">
+<img src="/assets/images/scprise2.png" alt="scprise2" width="49%" class="inline-block">
+<img src="/assets/images/scprisedame.png" alt="scprisedame" width="49%" class="inline-block">
+<em>Capture (highlighted in green) and possible positions</em>
+</div>
+
+<div style="text-align: center">
+<img src="/assets/images/scprisemult.png" alt="scprisemult" width="80%">
+<em>Multiple capture: all the captured pieces and the final destination are highlighted</em>
+</div>
+
 
 ## AI principles
 
@@ -154,7 +187,10 @@ built and kept in the memory before starting to calculate the $$V$$ values.
 Instead, a recursive function can be used, taking advantage the minimax algorithm. In this case, it computes and propagates 
 the $$V$$ scores while exploring the tree.
 
-function Minimax($$X$$):  
+call Minimax($$X_{root})$$
+
+where:  
+function Minimax($$X$$) is  
 &nbsp;&nbsp;&nbsp;&nbsp;if $$X$$ is in $$L$$-th layer:  
 &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;return $$f(X)$$  
@@ -191,7 +227,12 @@ to maximize the value, they will not play any move scoring below $$\alpha$$ and 
 they will not play any move scoring above $$\beta$$. That means that when $$\alpha \geq \beta$$, it's not worth exploring the rest 
 of the branch anymore.
 
-function Minimax($$X$$, $$\alpha$$, $$\beta$$):  
+$$\alpha$$ := $$- \infty$$  
+$$\beta$$ := $$+ \infty$$  
+call Minimax($$X_{root}$$, $$\alpha$$, $$\beta$$)
+
+where:  
+function Minimax($$X$$, $$\alpha$$, $$\beta$$) is  
 &nbsp;&nbsp;&nbsp;&nbsp;if $$X$$ is in $$L$$-th layer:  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $$f(X)$$  
 &nbsp;&nbsp;&nbsp;&nbsp;elif $$X$$ is in a maximizing layer ($$l$$ is even):  
