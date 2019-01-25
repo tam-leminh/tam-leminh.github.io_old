@@ -171,7 +171,12 @@ We observe that there are two kinds of layers. The ones where the player is play
 algorithm tries to maximize $$V$$, and the ones where the opponent is playing (layers indexed by odd numbers), so the algorithm 
 assume they want to minimize $$V$$. So the levels alternate between maximizing and minimizing steps.
 
-Also, before, we assumed that all the branches can be developed beyond the $$L$$-th layer. In practice, this is often true, 
+<div style="text-align: center">
+<img src="/assets/images/finparcoursarbre.png" alt="finparcoursarbre" width="80%">
+<em>Minimax score propagation</em>
+</div>
+
+However, we assumed that all the branches can be developed beyond the $$L$$-th layer. In practice, this is often true, 
 especially in start or mid game situations. However, in the case where there are winning or losing positions, the tree does not 
 develop further in the direction of the corresponding nodes. We can assume that when it's the player's turn and they have 
 possibilities, that means they have lost. So we can affect a $$- \infty$$ value to this node. If this is the opponent who cannot 
@@ -185,38 +190,54 @@ the relevant values, until reaching $$V_1$$. However, in practice, this method i
 built and kept in the memory before starting to calculate the $$V$$ values. 
 
 Instead, a recursive function can be used, taking advantage the minimax algorithm. In this case, it computes and propagates 
-the $$V$$ scores while exploring the tree.
+the $$V$$ scores while exploring the tree depth-first: One branch is developed until the leaf, then the value of its predecessor is found evaluating 
+all its children. Then the value of this predecessor will be used to find the value of its own predecessor, etc.
 
-call Minimax($$X_{root})$$
-
-where:  
-function Minimax($$X$$) is  
-&nbsp;&nbsp;&nbsp;&nbsp;if $$X$$ is in $$L$$-th layer:  
+<div style="text-align: center">
+<img src="/assets/images/arbre.png" alt="arbre" width="80%">
+<em>Exploration order of the minimax algorithm</em>
+</div>
+  
+Algorithm:  
+  
+**return** *Minimax*($$X_{root}$$)
+  
+where:
+  
+**function** *Minimax*($$X$$) **is**  
+  
+&nbsp;&nbsp;&nbsp;&nbsp;**if** $$X$$ is in $$L$$-th layer **then**  
 &nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;return $$f(X)$$  
-&nbsp;&nbsp;&nbsp;&nbsp;elif $$X$$ is in a maximizing layer ($$l$$ is even):  
+&nbsp;&nbsp;&nbsp;&nbsp;**return** $$f(X)$$  
+  
+&nbsp;&nbsp;&nbsp;&nbsp;**else if** $$X$$ is in a maximizing layer ($$l$$ is even) **then**  
 &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;result := $$- \infty$$  
 &nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;for each child $$X_i$$:  
+&nbsp;&nbsp;&nbsp;&nbsp;**for each** child $$X_i$$ **do**  
 &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;result := $$\max$$(result, Minimax($$X_i$$))  
+&nbsp;&nbsp;&nbsp;&nbsp;result := $$\max$$(result, *Minimax*($$X_i$$))  
 &nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;return result  
-&nbsp;&nbsp;&nbsp;&nbsp;else:  
+&nbsp;&nbsp;&nbsp;&nbsp;**end for**  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;**return** result  
+  
+&nbsp;&nbsp;&nbsp;&nbsp;**else**  
 &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;result := $$+ \infty$$  
 &nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;for each child $$X_i$$:  
+&nbsp;&nbsp;&nbsp;&nbsp;**for each** child $$X_i$$ **do**  
 &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;result := $$\min$$(result, Minimax($$X_i$$))  
+&nbsp;&nbsp;&nbsp;&nbsp;result := $$\min$$(result, *Minimax*($$X_i$$))  
 &nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;return result  
+&nbsp;&nbsp;&nbsp;&nbsp;**end for**  
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;**return** result    
+  
+&nbsp;&nbsp;&nbsp;&nbsp;**end if**  
 
-This is a depth-first exploration: One branch is developed until the leaf, then the value of its predecessor is found evaluating 
-all its children. Then the value of this predecessor will be used to find the value of its own predecessor, etc.
 
 ### Alpha-beta pruning
 
@@ -227,30 +248,47 @@ to maximize the value, they will not play any move scoring below $$\alpha$$ and 
 they will not play any move scoring above $$\beta$$. That means that when $$\alpha \geq \beta$$, it's not worth exploring the rest 
 of the branch anymore.
 
+<div style="text-align: center">
+<img src="/assets/images/arbrealpha.png" alt="arbrealpha" width="80%">
+<em>Ignored nodes with alpha-beta</em>
+</div>
+
+Algorithm:  
+
 $$\alpha$$ := $$- \infty$$  
 $$\beta$$ := $$+ \infty$$  
-call Minimax($$X_{root}$$, $$\alpha$$, $$\beta$$)
+**return** *Minimax*($$X_{root}$$, $$\alpha$$, $$\beta$$)
 
 where:  
-function Minimax($$X$$, $$\alpha$$, $$\beta$$) is  
-&nbsp;&nbsp;&nbsp;&nbsp;if $$X$$ is in $$L$$-th layer:  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $$f(X)$$  
-&nbsp;&nbsp;&nbsp;&nbsp;elif $$X$$ is in a maximizing layer ($$l$$ is even):  
+
+**function** *Minimax*($$X$$, $$\alpha$$, $$\beta$$) **is**  
+  
+&nbsp;&nbsp;&nbsp;&nbsp;**if** $$X$$ is in $$L$$-th layer **then**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**return** $$f(X)$$  
+  
+&nbsp;&nbsp;&nbsp;&nbsp;**else if** $$X$$ is in a maximizing layer ($$l$$ is even) **then**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$- \infty$$  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for each child $$X_i$$:  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$\max$$(result, Minimax($$X_i$$, $$\alpha$$, $$\beta$$))  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**for each** child $$X_i$$ **do**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$\max$$(result, *Minimax*($$X_i$$, $$\alpha$$, $$\beta$$))  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$\alpha$$ := $$\max$$($$\alpha$$, result)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if $$\alpha \geq \beta$$:  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $$\alpha$$  
-&nbsp;&nbsp;&nbsp;&nbsp;else:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**if** $$\alpha \geq \beta$$ **then**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**break**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end if**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end for**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**return** $$\alpha$$  
+  
+&nbsp;&nbsp;&nbsp;&nbsp;**else**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$+ \infty$$  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for each child $$X_i$$:  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$\min$$(result, Minimax($$X_i$$, $$\alpha$$, $$\beta$$))  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**for each** child $$X_i$$ **do**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$\min$$(result, *Minimax*($$X_i$$, $$\alpha$$, $$\beta$$))  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$\beta$$ := min($$\beta$$, result)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if $$\alpha \geq \beta$$:  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $$\beta$$  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**if** $$\alpha \geq \beta$$ **then**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**break**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end if**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end for**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**return** $$\beta$$  
+  
+&nbsp;&nbsp;&nbsp;&nbsp;**end if**  
 
 ### Horizon effect
 
@@ -264,4 +302,9 @@ This can be worked around by evaluating the quietness of a position. For example
 be noisy if there are possible captures, quiet otherwise. Then, on the last layer, the algorithm can continue to develop the tree 
 after the maximum depth, but only for the noisy positions, until all the leaves are quiet. Thus, for a small cost, the algorithm 
 can avoid obvious hidden traps that were beyond its vision (or horizon).
+
+<div style="text-align: center">
+<img src="/assets/images/arbrehorizon.png" alt="arbrehorizon" width="80%">
+<em>Tree continued after the max depth (2) to avoid the horizon effect</em>
+</div>
 
