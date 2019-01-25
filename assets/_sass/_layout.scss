@@ -206,6 +206,23 @@ main {
   }
 }
 
+#markdown-toc::before {
+    content: "Contents";
+    font-weight: bold;
+}
+
+// Using numbers instead of bullets for listing
+#markdown-toc ul {
+    list-style: decimal;
+}
+
+#markdown-toc {
+    border: 1px solid #aaa;
+    padding: 1.5em;
+    list-style: upper-roman;
+    display: inline-block;
+}
+
 article {
   padding: 2em 1em;
   img,

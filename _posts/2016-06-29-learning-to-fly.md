@@ -17,6 +17,9 @@ simulator in C++ developed by the [SuReLI](https://sureli.github.io) research gr
 simulator provides an environment to test Reinforcement Learning algorithms allowing a model of glider 
 to learn the optimal guidance and controls for an autonomous flight.
 
+* ToC
+{:toc}
+
 ## Background
 
 ### Flight dynamics

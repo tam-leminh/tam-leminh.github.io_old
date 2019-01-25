@@ -42,5 +42,8 @@ sass:
 
 images: '/assets/images'
 
+kramdown:
+  parse_block_html: true
+
 plugins: 
   - jekyll-pseudocode-b

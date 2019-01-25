@@ -10,6 +10,7 @@ author: Tâm Le Minh
 type: "project"
 ---
 
+
 Strategic games have been a subject of AI research since decades. This is a fascinating domain, not only because 
 people like playing games, but their respective ecosystems allow the algorithm to be easily benchmarked, by simply 
 matching them against players of various level. Thus, methods for solving different games such as Chess, Checkers or 
@@ -19,6 +20,9 @@ regular 6-game match. Though the match was close, this was the first time AI top
 game considered to be unsolvable.
 
 [![deepblue]({{ site.images | relative_url }}/deepblue.jpg)]({{ site.images | relative_url }}/deepblue.jpg)
+
+* ToC
+{:toc}
 
 ## AI in board games
 
