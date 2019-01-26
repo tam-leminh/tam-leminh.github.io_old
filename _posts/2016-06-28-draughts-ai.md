@@ -73,31 +73,38 @@ position for him.
 <em>Mandatory capture rules</em>
 </div>
 
+## Draughts-AI
+
 I designed and developed Draughts-AI, an International Checkers game with Matthieu Drouard, another ISAE-SUPAERO student. It was part 
 of our first-year research project, supervised by J.-M. Alliot. The game is programmed in C. There are three main 
 components:
 - the move generator, i.e. the engine of the game, including the rules. For each position, it computes the possible moves. 
-For each moves, it computes the next position,
+For each move, it computes the next position,
 - the GUI, made with SDL,
 - the AI algorithm, which evaluates the best move for a player.
 The user can choose to play without AI (e.g. against another player), to play against an AI bot or to make two AI bots play 
 against each other.
 
+The GUI was made as simple as possible, but it should still provide helpful information to the user.
+- the kings are easily recognized as they are marked with a "D" (*dame* in French),
+- when clicking on a piece, all the possible moves are visualized by highlighting the destination squares in blue,
+- if there are captures, the captured pieces are highlighted in green and the destination squares in blue.
+
 <div style="text-align: center">
 <img src="/assets/images/scdepl.png" alt="scdepl" width="49%" class="inline-block">
 <img src="/assets/images/scdepldame.png" alt="scdepldame" width="49%" class="inline-block">
-<em>Possible moves highlighted in blue ([D] stands for the King piece, "Dame" in French)</em>
+<em>Possible moves</em>
 </div>
 
 <div style="text-align: center">
 <img src="/assets/images/scprise2.png" alt="scprise2" width="49%" class="inline-block">
 <img src="/assets/images/scprisedame.png" alt="scprisedame" width="49%" class="inline-block">
-<em>Capture (highlighted in green) and possible positions</em>
+<em>Capture and final positions</em>
 </div>
 
 <div style="text-align: center">
-<img src="/assets/images/scprisemult.png" alt="scprisemult" width="80%">
-<em>Multiple capture: all the captured pieces and the final destination are highlighted</em>
+<img src="/assets/images/scprisemult.png" alt="scprisemult" width="60%">
+<em>Multiple capture</em>
 </div>
 
 
@@ -108,10 +115,10 @@ tree where the nodes are game states $$s$$. In Checkers or Chess, a state can be
 but also the next player to play. At one particular state of the game, each possible $$a \in A_s$$ move leads to a new state 
 $$s' \in S_s$$ (the subscripts denote that these are the set of actions and sets accessible from the state $$s$$), i.e. it's 
 an edge leading to a new node. Let $$a(s,s')$$ be such a move. The root of the tree is the node representing the current 
-state. Therefore, each layer in the tree represent one move. The root is the layer 0. For example, one can list all the nodes 
+state. Therefore, each layer in the tree represents one move. The root is the layer 0. For example, one can list all the nodes 
 in the layer 2 to know all the possible configurations after 2 moves. Let $$S_i$$ be the set of all possible states after $$i$$ 
 moves, or all the states of the $$i$$-th layer. Note that within one layer, there could be several nodes representing the same state 
-as different Also, because the players alternate turns and there is only one move allowed per turn, each layer represent a turn. 
+as different Also, because the players alternate turns and there is only one move allowed per turn, each layer represents a turn. 
 Thus, one layer could represent player 1's turn, then the next layer would represent player 2's, etc. A branch of the tree is 
 ended only when the game ends, i.e. the leafs are checkmate or stalemate states. 
 
@@ -120,29 +127,41 @@ quality. Now, Checkers are a zero-sum game. That means for one player, a good si
 for their opponent. For player 1, for one particular move $$a_t$$, the value $$Q_1(a_t)$$ gets as high as their opponent's $$Q_2(a_t)$$ 
 gets low. Each player looks to maximize its own values $$Q$$: I hope to play the best move and I hope my opponent plays as poorly as 
 possible. This is equivalent to saying that player 1 wants to maximize $$Q$$ whereas player 2 wants to minimize it. The minimax 
-algorithm is based on this idea. Now for simplicity, instead of reasoning in actions and states, we can take advantage of the tree and 
+algorithm is based on this idea. 
+
+Now for simplicity, instead of reasoning in actions and states, we can take advantage of the tree and 
 use nodes and layers. Each node $$X$$ corresponds to a state $$s$$. It has $$n_X$$ children nodes $$X_i \in (X_i)_{i \in [1,n_X]}$$, each 
 associated to a state $$s_i$$ by an action $$a(s,s_i) \in A_{s}$$. Let $$V_l$$ be a score value for the nodes of the $$l$$-th 
-layer, such as if $$X_i$$ is in the $$l$$-th layer, $$V_l(X_i) = Q(a(s,s_i))$$.
+layer, such as if $$X_i$$ is in the $$l$$-th layer, 
 
-How can we calculate $$V_l$$? 
+$$V_l(X_i) = Q(a(s,s_i))$$
+
 
 ### Minimax algorithm
 
-First, let's suppose that we can evaluate the quality of a state $$s$$. This is modelled with an evaluation function $$f$$. A higher 
+To calculate $$V_l$$, let's suppose first that we can evaluate the quality of a state $$s$$. This is modelled with an evaluation function $$f$$. A higher 
 $$f(s)$$ means the more favourable to us. Inversely, it is lower when the state is worse. Because each node $$X$$ is associated with a 
 state $$s$$, we can write $$f(X) = f(s)$$.
 
 At the root node $$X_{root}$$, player 1 plays. They can select the move that leads to the node $$X_{max}$$ where the value of $$f$$ 
-is the highest, i.e. $$X_{max} = \arg \max_{i \in [1,n_{Xroot}]}$$ $$ V_1(X_i) = f(X_i)$$. However this is a short-sighted strategy. 
-Indeed, in this case, only the next move is evaluated. Maybe this can allow player 2 to react with an even better move, that 
+is the highest, i.e. 
+
+$$X_{max} = \arg \max_{i \in [1,n_{Xroot}]} V_1(X_i) = f(X_i)$$ 
+
+However this is a short-sighted strategy. Indeed, in this case, only the next move is evaluated. Maybe this can allow player 2 to react with an even better move, that 
 will eventually put player 1 in an awful situation. Perhaps there are poor moves in the short-term, sacrificing pieces for example, 
 but would result in a better position several turns ahead. For an analogy in Chess, a good move when considering only one turn 
 ahead but bad when considering 2 turns, could be to capture a defended pawn with a rook, because then the rook would be captured 
 itself in the next turn. So a following this approach, we should also check the opponent's possibilities. Hence, we cannot just 
-straightforwardly use the function f. We would rather define 
-$$X_{max}$$ such as $$X_{max} = \arg \max_{i \in [1,n_{Xroot}]} V_1(X_i)$$ where $$V_1$$ is now 
-$$V_1(X) = \min_{i \in [1,n_X]} V_2(X_i) = f(X_i)$$. That means, we consider the strongest reaction the opponent can throw after 
+straightforwardly use the function f. We would rather define $$X_{max}$$ such as 
+
+$$X_{max} = \arg \max_{i \in [1,n_{Xroot}]} V_1(X_i)$$  
+  
+where $$V_1$$ is now 
+
+$$V_1(X) = \min_{i \in [1,n_X]} V_2(X_i) = f(X_i)$$  
+
+That means, we consider the strongest reaction the opponent can throw after 
 each of our possible move, and we choose the move where this optimal reaction is the weakest. In other words, we are preventing 
 them as much as possible to play the best moves.
 
@@ -150,28 +169,32 @@ Layer after layer, we can continue to look forward and plan more moves. In an op
 to build the complete tree due to the overwhelming large number of possibilities. Therefore, we must define a tree depth corresponding 
 to the number of moves we want to plan. An larger tree depth means better moves, but the computational effort required also increases 
 exponentially. The previous problem can be generalized for $$L$$ layers:
-Define $$V_L(X) = f(X)$$
-For $$l \in [1,L-1]$$:
-	If $$l$$ is even:$$
-		\begin{equation}
-			V_l(X) = 
-			\begin{cases}
-				- \infty, & \text{if} X has no children \\
-				\max{i \in [1,n_X]} V_{l+1}(X_i), & \text{if} X has children 
-			\end{cases}
-		\end{equation}$$
-	if $$l$$ is odd:$$
-		\begin{equation}
-			V_l(X) = 
-			\begin{cases}
-				+ \infty, & \text{if} X has no children \\
-				\min{i \in [1,n_X]} V_{l+1}(X_i), & \text{if} X has children 
-			\end{cases}
-		\end{equation}$$
-	
-Pick $$X_{max} = \arg \max_{i \in [1,n_{Xroot}]} V_1(X_i)$$
 
-We observe that there are two kinds of layers. The ones where the player is playing (layers indexed by even numbers), so the 
+&nbsp;&nbsp;&nbsp;&nbsp;**define** $$V_L(X) = f(X)$$  
+  
+&nbsp;&nbsp;&nbsp;&nbsp;**for each** $$l \in [L-1, L-2, ... , 1]$$ **do**  
+   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**if** $$l$$ is maximizing/even **then**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**if** **X** has no children **then**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$V_l(X) = - \infty$$  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**else**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$V_l(X) = \max_{i \in [1,n_X]} V_{l+1}(X_i)$$  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end if**
+		
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**else** ($$l$$ is minimizing/odd)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**if** **X** has no children **then**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$V_l(X) = + \infty$$  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**else**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$V_l(X) = \min_{i \in [1,n_X]} V_{l+1}(X_i)$$  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end if**
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end if**  
+
+&nbsp;&nbsp;&nbsp;&nbsp;**end for**  
+
+&nbsp;&nbsp;&nbsp;&nbsp;**pick** $$X_{max} = \arg \max_{i \in [1,n_{Xroot}]} V_1(X_i)$$
+
+We observe two kinds of layers. The ones where the player is playing (layers indexed by even numbers), so the 
 algorithm tries to maximize $$V$$, and the ones where the opponent is playing (layers indexed by odd numbers), so the algorithm 
 assume they want to minimize $$V$$. So the levels alternate between maximizing and minimizing steps.
 
@@ -202,9 +225,9 @@ all its children. Then the value of this predecessor will be used to find the va
 <em>Exploration order of the minimax algorithm</em>
 </div>
   
-Algorithm:  
+Minimax algorithm:  
   
-**return** *Minimax*($$X_{root}$$)
+&nbsp;&nbsp;&nbsp;&nbsp;**return** *Minimax*($$X_{root}$$)
   
 where:
   
@@ -213,8 +236,9 @@ where:
 &nbsp;&nbsp;&nbsp;&nbsp;**if** $$X$$ is in $$L$$-th layer **then**  
 &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;**return** $$f(X)$$  
+&nbsp;&nbsp;&nbsp;&nbsp;**end if**  
   
-&nbsp;&nbsp;&nbsp;&nbsp;**else if** $$X$$ is in a maximizing layer ($$l$$ is even) **then**  
+&nbsp;&nbsp;&nbsp;&nbsp;**if** $$X$$ is in a maximizing layer ($$l$$ is even) **then**  
 &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;result := $$- \infty$$  
 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -257,37 +281,34 @@ of the branch anymore.
 <em>Ignored nodes with alpha-beta</em>
 </div>
 
-Algorithm:  
+Alpha-beta algorithm:  
 
-$$\alpha$$ := $$- \infty$$  
-$$\beta$$ := $$+ \infty$$  
-**return** *Minimax*($$X_{root}$$, $$\alpha$$, $$\beta$$)
+&nbsp;&nbsp;&nbsp;&nbsp;$$\alpha$$ := $$- \infty$$  
+&nbsp;&nbsp;&nbsp;&nbsp;$$\beta$$ := $$+ \infty$$  
+&nbsp;&nbsp;&nbsp;&nbsp;**return** *Alphabeta*($$X_{root}$$, $$\alpha$$, $$\beta$$)
 
 where:  
 
-**function** *Minimax*($$X$$, $$\alpha$$, $$\beta$$) **is**  
+**function** *Alphabeta*($$X$$, $$\alpha$$, $$\beta$$) **is**  
   
 &nbsp;&nbsp;&nbsp;&nbsp;**if** $$X$$ is in $$L$$-th layer **then**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**return** $$f(X)$$  
+&nbsp;&nbsp;&nbsp;&nbsp;**end if**  
   
-&nbsp;&nbsp;&nbsp;&nbsp;**else if** $$X$$ is in a maximizing layer ($$l$$ is even) **then**  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$- \infty$$  
+&nbsp;&nbsp;&nbsp;&nbsp;**if** $$X$$ is in a maximizing layer ($$l$$ is even) **then**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**for each** child $$X_i$$ **do**  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$\max$$(result, *Minimax*($$X_i$$, $$\alpha$$, $$\beta$$))  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$\alpha$$ := $$\max$$($$\alpha$$, result)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$\alpha$$ := $$\max$$($$\alpha$$, *Alphabeta*($$X_i$$, $$\alpha$$, $$\beta$$))  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**if** $$\alpha \geq \beta$$ **then**  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**break**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**return** $$\alpha$$  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end if**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end for**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**return** $$\alpha$$  
   
 &nbsp;&nbsp;&nbsp;&nbsp;**else**  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$+ \infty$$  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**for each** child $$X_i$$ **do**  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result := $$\min$$(result, *Minimax*($$X_i$$, $$\alpha$$, $$\beta$$))  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$\beta$$ := min($$\beta$$, result)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$\beta$$ := $$\min$$($$\beta$$, *Alphabeta*($$X_i$$, $$\alpha$$, $$\beta$$))  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**if** $$\alpha \geq \beta$$ **then**  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**break**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**return** $$\beta$$  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end if**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**end for**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**return** $$\beta$$  
@@ -309,6 +330,57 @@ can avoid obvious hidden traps that were beyond its vision (or horizon).
 
 <div style="text-align: center">
 <img src="/assets/images/arbrehorizon.png" alt="arbrehorizon" width="80%">
-<em>Tree continued after the max depth (2) to avoid the horizon effect</em>
+<em>Tree continued after the max depth (L=2) to avoid the horizon effect</em>
 </div>
 
+To implement this solution, we can reuse the alpha-beta algorithm. The difference will only be at the layer $$L$$, where the 
+tree is developed until all the leaves are quiet.
+
+
+### Evaluation function
+
+Recall that this algorithm only propagates the values $$f(X)$$ of the leaves to the root node. We haven't discussed how to define 
+$$f$$, yet this is critical to the performance of the AI.  
+
+$$f(X)$$ represents how good the position $$X$$ is. If we define a set of features $$/phi (X)$$ for $$X$$, then we can write
+
+$$f(X) = \phi (X)^\intercal w$$
+
+where $$w$$ is a vector of parameters to learn.
+
+For $$\phi (X)$$, we present some ideas of features. The most obvious one is the number of pieces $$p$$. Because a player loses when 
+they have no pieces more and we can assume their position is better when they have more pieces, this is a relevant feaure. As kings 
+are very strong, we also consider the number of kings $$k$$. As Checkers are a zero-sum game, what makes one player's advantage also 
+disfavors the other player. So we can differentiate the number of pieces and kings for the player and the opponent: $$p_{own}$$, 
+$$k_{own}$$, $$p_{opp}$$ and $$k_{opp}$$.
+
+Obviously, simply counting the pieces is not enough. One cannot decide when no captures are possible and more importantly, maybe some 
+configurations are better with lesser pieces. Indeed, one can lose a lot of pieces rapidly if the opponent realizes a multiple capture. 
+For instance, to protect a piece, one can place other pieces behind, in order to block possible captures by the opponent. The more space 
+is left between pieces, the more vulnerable they are. Let's count the all the free squares around one player's pieces. The result 
+determines how compact one player's formation is. A lower value means a more compact setup. Let's call it a "compactness malus" $$c_{own}$$. 
+Similarly to the number of pieces, we define $$c_{opp}$$ as the number of free squares around the opponent's pieces.
+
+Finally, one important strategic aspect of the game is to force the opponent to make moves that would put them in a poor situation. 
+Blocking their pieces or forcing them by sacrificing your own pieces are techniques that can allow you to take the advantage. The 
+less possible moves your opponent can make, the more constrained they are. We call this number of moves $$m_{opp}$$ as this is a 
+measure of the mobility of the opponent. Inversely, we define $$m_{own}$$ as our mobility.
+
+In the end, we have:
+
+$$\phi (X) = \begin{bmatrix} p_{own}(X) \\ k_{own}(X) \\ c_{own}(X) \\ m_{own}(X) \\ p_{opp}(X) \\ k_{opp}(X) \\ c_{opp}(X) \\ m_{opp}(X) \end{bmatrix}$$
+
+Though the algorithms of Draughts-AI only considers the mentioned features, one can find and design new features to improve the evaluation 
+of a position. 
+
+There are different methods to tune or learn $$w$$. One can use reinforcement learning or gradient descent, but this is out of the 
+scope of this article. The key is to compare two evaluation functions. For this, Draughts-AI allows to set 2 AI players with these 
+evaluation functions to play against each other. The winner can be considered "better". We can also count the number of pieces left 
+for the winner, which determines the margin by which the winner won. 
+
+In some cases, it can happen that one evaluation function "hard-counters" the other one. That means that though the former is not 
+overall better, it does especially well against the strategy used by the latter. This phenomenon can be seen as overfitting for 
+some learning algorithms. A way to add more robustness and reliability in comparing two evaluation functions is to let them play a 
+match of several games (e.g. 10 games), but introducing some randomness. At each move, we can assign a probability so it's randomly 
+picked among all the possible moves instead of running the minimax algorithm. Then, averaging the results of all the games, we can 
+obtain a better comparison between the two AIs.
