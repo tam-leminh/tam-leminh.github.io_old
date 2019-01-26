@@ -112,15 +112,17 @@ The GUI was made as simple as possible, but it should still provide helpful info
 
 At each turn, the algorithm should determine the best move to play for the selected player. It relies on a game 
 tree where the nodes are game states $$s$$. In Checkers or Chess, a state can be represented by a configuration of pieces, 
-but also the next player to play. At one particular state of the game, each possible $$a \in A_s$$ move leads to a new state 
-$$s' \in S_s$$ (the subscripts denote that these are the set of actions and sets accessible from the state $$s$$), i.e. it's 
-an edge leading to a new node. Let $$a(s,s')$$ be such a move. The root of the tree is the node representing the current 
-state. Therefore, each layer in the tree represents one move. The root is the layer 0. For example, one can list all the nodes 
-in the layer 2 to know all the possible configurations after 2 moves. Let $$S_i$$ be the set of all possible states after $$i$$ 
-moves, or all the states of the $$i$$-th layer. Note that within one layer, there could be several nodes representing the same state 
-as different Also, because the players alternate turns and there is only one move allowed per turn, each layer represents a turn. 
-Thus, one layer could represent player 1's turn, then the next layer would represent player 2's, etc. A branch of the tree is 
-ended only when the game ends, i.e. the leafs are checkmate or stalemate states. 
+but also the next player to play. 
+
+At one particular state of the game, each possible $$a$$ move leads to a new state 
+$$s'$$, $$a$$ represents an edge leading to a new node. Let $$a(s,s')$$ be such a move. 
+
+The root of the tree is the node representing the current state. Therefore, each layer in the tree represents one move. 
+The root is the layer 0. For example, one can list all the nodes in the layer 2 to know all the possible configurations after 2 moves. 
+
+Note that there could be several nodes representing the same state, including in the same layer. Also, because the players alternate turns 
+and there is only one move allowed per turn, each layer represents a turn. Thus, one layer could represent player 1's turn, then the next 
+layer would represent player 2's, etc. A branch of the tree is ended only when the game ends, i.e. the leafs are winning or losing states. 
 
 Let's consider that the algorithm plays as player 1. Then, each decision/move should be associated with a value $$Q(a)$$, measure of its 
 quality. Now, Checkers are a zero-sum game. That means for one player, a good situation for is equally good for them than bad 
@@ -131,10 +133,13 @@ algorithm is based on this idea.
 
 Now for simplicity, instead of reasoning in actions and states, we can take advantage of the tree and 
 use nodes and layers. Each node $$X$$ corresponds to a state $$s$$. It has $$n_X$$ children nodes $$X_i \in (X_i)_{i \in [1,n_X]}$$, each 
-associated to a state $$s_i$$ by an action $$a(s,s_i) \in A_{s}$$. Let $$V_l$$ be a score value for the nodes of the $$l$$-th 
+associated to a state $$s_i$$ by an action $$a(s,s_i)$$. Let $$V_l$$ be a score value for the nodes of the $$l$$-th 
 layer, such as if $$X_i$$ is in the $$l$$-th layer, 
 
 $$V_l(X_i) = Q(a(s,s_i))$$
+
+Thus, using $$Q$$ and $$a(s,s_i)$$, or $$V_l$$ and $$X_i$$ is equivalent. In the remaining sections of the article, we will use $$V_l$$ and 
+$$X_i$$ as they are simpler to use.
 
 
 ### Minimax algorithm
@@ -342,7 +347,7 @@ tree is developed until all the leaves are quiet.
 Recall that this algorithm only propagates the values $$f(X)$$ of the leaves to the root node. We haven't discussed how to define 
 $$f$$, yet this is critical to the performance of the AI.  
 
-$$f(X)$$ represents how good the position $$X$$ is. If we define a set of features $$/phi (X)$$ for $$X$$, then we can write
+$$f(X)$$ represents how good the position $$X$$ is. If we define a set of features $$\phi (X)$$ for $$X$$, then we can write
 
 $$f(X) = \phi (X)^\intercal w$$
 
