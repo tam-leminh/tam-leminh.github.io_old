@@ -8,6 +8,7 @@ date:   2016-06-29 20:09:47 +0700
 categories: posts
 author: Tâm Le Minh
 type: project
+github: https://github.com/SuReLI/L2F-sim
 ---
 
 The idea of an autonomous glider instead of a regular engine-powered UAVs is very attractive. 

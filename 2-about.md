@@ -17,3 +17,9 @@ Major: *Computer Science and Autonomous Systems*
 
 - 2015-2016: **Master of Science**, *Cranfield University*, Cranfield, UK  
 Major: *Safety and Human Factors in Aviation*  
+
+## Links
+
+[Github Profile](https://github.com/tam-leminh/)
+
+[LinkedIn](https://www.linkedin.com/in/tamleminh/)

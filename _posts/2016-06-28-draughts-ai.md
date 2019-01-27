@@ -8,6 +8,7 @@ date:   2016-06-28 23:09:47 +0700
 categories: posts
 author: Tâm Le Minh
 type: "project"
+github: https://github.com/tam-leminh/draughts-ai
 ---
 
 
