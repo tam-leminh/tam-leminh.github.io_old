@@ -19,6 +19,10 @@ active: projects
   <div>
   <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
   </div>
+  <div>
+  <a target="_blank" style="background-color: olivedrab; color: white" href="{{ post.url | relative_url }}" class="linkbutton">Article</a>
+  <a target="_blank" style="background-color: saddlebrown; color: white" href="{{ post.github }}" class="linkbutton">Github</a>
+  </div>
 </div>
 
   {% endif %}
