@@ -20,6 +20,6 @@ Major: *Safety and Human Factors in Aviation*
 
 ## Links
 
-[Github Profile](https://github.com/tam-leminh/)
+[GitHub Profile](https://github.com/tam-leminh/)
 
 [LinkedIn](https://www.linkedin.com/in/tamleminh/)

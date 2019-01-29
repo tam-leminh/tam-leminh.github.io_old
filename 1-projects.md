@@ -1,5 +1,5 @@
 ---
-bg: "owl.jpg"
+bg: "montenegro.jpg"
 layout: page
 title: "Projects"
 crawlertitle: "Projects - Tâm Le Minh"
