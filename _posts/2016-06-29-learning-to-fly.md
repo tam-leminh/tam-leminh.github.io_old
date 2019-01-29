@@ -39,6 +39,9 @@ planes, this external source is the thrust from their engines. When they run out
 keep their energy anymore, so they will eventually slow down and fall down to the ground.
 
 [![flightdynamics]({{ site.images | relative_url }}/flightdynamics.png)]({{ site.images | relative_url }}/flightdynamics.png)
+<div style="text-align: center">
+<em>Main flight dynamics forces</em>
+</div>
 
 Gliders cannot benefit from thrust, so they must rely on air currents. Glider pilots soar by taking 
 advantage of columns of rising air called thermals. They fly in circles to stay in the thermal until 
@@ -46,6 +49,9 @@ they reach the desired altitude. The idea of the project is to use Reinforcement
 to let the glider learn the optimal way to use the thermals.
 
 [![thermal1]({{ site.images | relative_url }}/thermal1.png)]({{ site.images | relative_url }}/thermal1.png)
+<div style="text-align: center">
+<em>Allen model for thermals</em>
+</div>
 
 ### Reinforcement Learning
 
@@ -86,7 +92,10 @@ Indeed, $$\alpha = 0$$ means the algorithm relies exclusively on his prior knowl
 new inputs. In constrast, $$\alpha = 1$$ makes the new information override the old values completely. Therefore, $$\alpha$$ 
 sets how fast the values should be updated.
 
-[![q-learning-table]({{ site.images | relative_url }}/q-learning-table.png)]({{ site.images | relative_url }}/q-learning-table.png)
+<div style="text-align: center">
+<img src="/assets/images/q-learning-table.png" alt="q-learning-table" width="60%">
+<em>Example of Q-learning table</em>
+</div>
 
 ## Implementation
 
@@ -203,6 +212,9 @@ The simulator consists of 4 main components:
 they have different properties depending on their age. Several models of thermals can be selected.
 
 [![thermal2]({{ site.images | relative_url }}/thermal2.png)]({{ site.images | relative_url }}/thermal2.png)
+<div style="text-align: center">
+<em>Simulated flight zone with thermals</em>
+</div>
 
 - a flight dynamics model, with a physical model of the glider inspired by 
 [Beeler et al., 2003](https://ntrs.nasa.gov/search.jsp?R=20040031358), 
@@ -219,4 +231,7 @@ Here is the official website of [Learning to Fly](https://websites.isae-supaero.
 You can also check out the latest version of the environment source code in this [Github Repository](https://github.com/SuReLI/L2F-sim).
 
 [![simu-l2f]({{ site.images | relative_url }}/simu-l2f.png)]({{ site.images | relative_url }}/simu-l2f.png)
+<div style="text-align: center">
+<em>Trajectory of a trained drone</em>
+</div>
 
