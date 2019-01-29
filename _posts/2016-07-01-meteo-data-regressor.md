@@ -18,7 +18,7 @@ learning pipeline. It is easy to automate it by combining the different function
 framework. It is also designed to work well with scikit-learn, so it can be extended either with 
 elements from scikit-learn or custom functions.
 
-The sequence of steps in the pipeline is:
+The pipeline consists of the following sequence of steps:
 - weather data acquisition,
 - definition of interpolation models,
 - prediction applying models on the data,
@@ -56,3 +56,9 @@ time in the filename (e.g. *Temp-2019_01_03-14_19.csv*).
 In the end, only one execution of *DownloadData.py* is sufficient to perform a data acquisition, 
 provided the *locations.csv* file exists. *Cities2Locations.py* doesn't need to be executed, 
 unless the list of cities *cities.csv* has been modified.
+
+## Meteo-DR framework
+
+## Benchmarking
+
+## Visualization
