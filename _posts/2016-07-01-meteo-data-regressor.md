@@ -181,20 +181,28 @@ be loaded to a pipeline as model and parameter inputs for reproduction purposes.
 
 ## Sample plots
 
+### Nearest neighbor
+
 [![nearestneighbor]({{ site.images | relative_url }}/nearestneighbor.png)]({{ site.images | relative_url }}/nearestneighbor.png)
 <div style="text-align: center">
 <em>Nearest neighbor interpolation</em>
 </div>
+
+### Inverse distance weighting
 
 [![idw]({{ site.images | relative_url }}/idw.png)]({{ site.images | relative_url }}/idw.png)
 <div style="text-align: center">
 <em>Inverse distance weighting interpolation with max_radius=300km</em>
 </div>
 
+### Regression splines
+
 [![splines]({{ site.images | relative_url }}/splines.png)]({{ site.images | relative_url }}/splines.png)
 <div style="text-align: center">
 <em>Regression splines interpolation with max_degree=5, penalty=1.0</em>
 </div>
+
+### Random forest
 
 [![randomforest]({{ site.images | relative_url }}/randomforest.png)]({{ site.images | relative_url }}/randomforest.png)
 <div style="text-align: center">
