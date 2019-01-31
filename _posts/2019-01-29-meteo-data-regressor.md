@@ -4,7 +4,7 @@ layout: post
 title:  "Meteo-DR"
 crawlertitle: "Meteo-DR - Tâm Le Minh"
 summary: "How to interpolate climate data?"
-date:   2016-06-29 20:09:47 +0700
+date:   2019-01-29 20:09:47 +0700
 categories: posts
 author: Tâm Le Minh
 type: project

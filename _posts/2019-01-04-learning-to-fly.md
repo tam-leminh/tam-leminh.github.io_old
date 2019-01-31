@@ -4,7 +4,7 @@ layout: post
 title:  "Learning to Fly"
 crawlertitle: "Learning to Fly - Tâm Le Minh"
 summary: "Autonomous Glider using Reinforcement Learning"
-date:   2016-06-29 20:09:47 +0700
+date:   2019-01-04 20:09:47 +0700
 categories: posts
 author: Tâm Le Minh
 type: project

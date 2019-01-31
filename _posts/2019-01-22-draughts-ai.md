@@ -4,7 +4,7 @@ layout: post
 title:  "Draughts AI"
 crawlertitle: "Draughts AI - Tâm Le Minh"
 summary: "Game of Draughts with a basic AI bot"
-date:   2016-06-28 23:09:47 +0700
+date:   2019-01-22 20:09:47 +0700
 categories: posts
 author: Tâm Le Minh
 type: "project"
