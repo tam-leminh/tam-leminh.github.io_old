@@ -67,7 +67,9 @@ unless the list of cities *cities.csv* has been modified.
 <em>Data acquisition process</em>
 </div>
 
-## Meteo-DR model framework
+## Meteo-DR framework
+
+### Motivation
 
 The initial goal of Meteo-DR was to build a framework for a full pipeline, including scikit-learn
 and custom models. The custom models were motivated by the fact that meteorological data has
@@ -120,26 +122,81 @@ referenced by their lat-lon coordinates.
 <em>Great circle distance</em>
 </div>
 
-However, not every regression model makes use of the distances (e.g. regression trees, regression splines,
+### Models and learning framework
+
+Not every regression model makes use of the distances (e.g. regression trees, regression splines,
 etc.). Therefore it is useless to reimplement these models, when we could use scikit-learn. Meteo-DR
-custom models are built with some common functions from scikit-learn:
+**CustomModels** are built with some common functions from scikit-learn:
 - *fit*,
 - *predict*,
 - *set_params* and *get_params*.
 
-This allow Meteo-DR to define a common wrapper, called **LearningFramework**, which acts as an upper functional
-layer. Its main functions are:
+Meteo-DR defines a common wrapper, called **LearningFramework**, which acts as an upper functional
+layer. It holds a model and a list of parameters. Its main functions are:
 - *score*, computes a score based on a error or loss function (such as mean squared error or can be defined),
 - *train*, fits the model on the data, can compute a (training) score,
 - *predict*, applies a trained model on a set of data, can compute a (test) score,
 - *optimize*, performs a search of optimal parameters, which values have to be specified (ranges or list of values).
 
-## Benchmarking
+In practice, a **LearningFramework** can be built in two different ways. The first way is to manually specify a model and a dictionary of 
+parameters (or parameter lists/boundaries for optimization of hyperparameters). The second way is to load a csv file, containing a *model* 
+and a *parameters* columns, containing the name of a model and a dictionary of parameters in string format. Thus, auto-generated optimization 
+or benchmark reports (see later) can be imported in the pipeline to "load" a list of **LearningFramework**. 
 
-## Visualization
+The optimization process of **LearningFramework** is a hyperparameter search for its model. From a list of parameters or parameters boundaries, 
+candidates are generated using either a grid search or a random search.
 
+<div style="text-align: center">
+<img src="/assets/images/gridsearch.jpg" alt="gridsearch" width="66%">
+<em>Grid search and random search of hyperparameters</em>
+</div>
+
+For each candidate, several cross-validation iterations are performed. Several cross-validation techniques are available, such as K-Fold or 
+ShuffleSplit. The number of splits/iterations can be specified. 
+
+<div style="text-align: center">
+<img src="/assets/images/kfold.png" alt="kfold" width="49%" class="inline-block">
+<img src="/assets/images/shufflesplit.png" alt="shufflesplit" width="49%" class="inline-block">
+<em>KFold and ShuffleSplit for n_splits=5</em>
+</div>
+
+Then, the average score is stored. It is used in the end to choose the best candidate. The optimize function can output the best candidate,
+its score and a table, listing all the candidates and their average score. This table can be exported to a csv file, called 
+optimization report or CV-report. The report then can be loaded to a pipeline to reproduce the calculations.
+
+### Benchmarking
+
+The **LearningFramework** can perform an optimal parameter search for a certain model. The MeteoPipeline can compare different models 
+(**LearningFramework** objects), after their optimal parameters are found.
+
+In addition to some console information, displaying the **LearningFrameworks** trained in real-time and their optimization results, the 
+optimization reports output are stored as CV-reports, and when the benchmark finishes, it outputs a benchmark report. The benchmark report 
+lists all the input models, their best candidates, and their train and test scores. Like the optimization report, the benchmark report can 
+be loaded to a pipeline as model and parameter inputs for reproduction purposes.
 
 [![meteodr-pipeline]({{ site.images | relative_url }}/meteodr-pipeline.png)]({{ site.images | relative_url }}/meteodr-pipeline.png)
 <div style="text-align: center">
 <em>MeteoPipeline steps</em>
+</div>
+
+## Sample plots
+
+[![nearestneighbor]({{ site.images | relative_url }}/nearestneighbor.png)]({{ site.images | relative_url }}/nearestneighbor.png)
+<div style="text-align: center">
+<em>Nearest neighbor interpolation</em>
+</div>
+
+[![idw]({{ site.images | relative_url }}/idw.png)]({{ site.images | relative_url }}/idw.png)
+<div style="text-align: center">
+<em>Inverse distance weighting interpolation with max_radius=300km</em>
+</div>
+
+[![splines]({{ site.images | relative_url }}/splines.png)]({{ site.images | relative_url }}/splines.png)
+<div style="text-align: center">
+<em>Regression splines interpolation with max_degree=5, penalty=1.0</em>
+</div>
+
+[![randomforest]({{ site.images | relative_url }}/randomforest.png)]({{ site.images | relative_url }}/randomforest.png)
+<div style="text-align: center">
+<em>Random forest interpolation with n_estimators=2000, max_degree=11, max_features=1</em>
 </div>
