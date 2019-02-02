@@ -8,18 +8,18 @@ summary: "About this blog"
 active: about
 ---
 
-## CV
+## Current
 
 - Since 2017: **Software Engineer**, *Thales Alenia Space*, Ditzingen, Germany
 
-- 2013-2017: **Diplôme d'Ingénieur** (eq. MSc), *ISAE-SUPAERO*, Toulouse, France  
+## Education
+
+- 2013-2017: **Diplôme d'Ingénieur** (eq. **MSc**), *ISAE-SUPAERO*, Toulouse, France  
 Major: *Computer Science and Autonomous Systems*  
 
-- 2015-2016: **Master of Science**, *Cranfield University*, Cranfield, UK  
+- 2015-2017: **Master of Science**, *Cranfield University*, Cranfield, UK  
 Major: *Safety and Human Factors in Aviation*  
 
-## Links
+## CV
 
-[GitHub Profile](https://github.com/tam-leminh/)
-
-[LinkedIn](https://www.linkedin.com/in/tamleminh/)
+[pdf]({{ "/assets/pdfs/CV-Le_Minh-Tam.pdf" | relative_url }})
