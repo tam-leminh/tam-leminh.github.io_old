@@ -4,13 +4,16 @@
 
   <nav class="center-wrapper nav-main">
 
-    <a class="blog-logo" href="{{ site.baseurl }}/">{{ site.title }}</a>
+    <a class="blog-logo" href="{{ site.baseurl }}/">Home</a>
 
     {% for my_page in site.pages %}
       {% if my_page.active %}
         <a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a>
       {% endif %}
     {% endfor %}
+	
+    <a target="_blank" href="https://github.com/tam-leminh">GitHub</a>
+    <a target="_blank" href="https://www.linkedin.com/in/tamleminh/">LinkedIn</a>
 
     <label for="menu-checkbox" class="toggle-button" data-open="☰" data-close="☰" onclick></label>
   </nav>
