@@ -12,6 +12,8 @@ active: about
 
 - Since 2017: **Software Engineer**, *Thales Alenia Space*, Ditzingen, Germany
 
+- [CV]({{ "/assets/pdfs/CV-Le_Minh-Tam.pdf" | relative_url }})
+
 ## Education
 
 - 2013-2017: **Diplôme d'Ingénieur** (eq. **MSc**), *ISAE-SUPAERO*, Toulouse, France  
@@ -21,6 +23,4 @@ Major: *Computer Science and Autonomous Systems*
 Major: *Safety and Human Factors in Aviation*  
 [Master Thesis]({{ "/assets/pdfs/Master_Thesis-Le_Minh-Tam-Cranfield.pdf" | relative_url }})  
 
-## CV
 
-[pdf]({{ "/assets/pdfs/CV-Le_Minh-Tam.pdf" | relative_url }})
