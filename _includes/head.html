@@ -12,6 +12,8 @@
       {{ site.title | escape }}
     {% endif %}
   </title>
+  
+  <link rel="shortcut icon" href="{{ "/assets/images/favicon.ico"  | relative_url }}">
 
   <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
 
