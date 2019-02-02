@@ -19,6 +19,7 @@ Major: *Computer Science and Autonomous Systems*
 
 - 2015-2017: **Master of Science**, *Cranfield University*, Cranfield, UK  
 Major: *Safety and Human Factors in Aviation*  
+[Master Thesis]({{ "/assets/pdfs/Master_Thesis-Le_Minh-Tam-Cranfield.pdf" | relative_url }})  
 
 ## CV
 
