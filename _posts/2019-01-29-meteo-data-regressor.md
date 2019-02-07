@@ -208,3 +208,10 @@ be loaded to a pipeline as model and parameter inputs for reproduction purposes.
 <div style="text-align: center">
 <em>Random forest interpolation with n_estimators=2000, max_degree=11, max_features=1</em>
 </div>
+
+### Neural network
+
+[![neuralnetwork]({{ site.images | relative_url }}/neuralnetwork.png)]({{ site.images | relative_url }}/neuralnetwork.png)
+<div style="text-align: center">
+<em>Neural network interpolation with 3 layers (2x FC 128 + output)</em>
+</div>
