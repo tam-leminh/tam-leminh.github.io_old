@@ -10,17 +10,21 @@ active: about
 
 ## Current
 
-- Since 2017: **Software Engineer**, *Thales Alenia Space*, Ditzingen, Germany
+- 2019-2020: **Master student in applied mathematics**, *University of Paris-Saclay*, Palaiseau, France
 
-- [CV]({{ "/assets/pdfs/CV-Le_Minh-Tam.pdf" | relative_url }})
+## Experience
+
+- 2017-2019: **Software Engineer**, *Thales Alenia Space*, Ditzingen, Germany
 
 ## Education
 
-- 2013-2017: **Diplôme d'Ingénieur** (eq. **MSc**), *ISAE-SUPAERO*, Toulouse, France  
-Major: *Computer Science and Autonomous Systems*  
+- 2017: **MSc in Computer Science**  
+*ISAE-SUPAERO*, Toulouse, France  
 
-- 2015-2017: **Master of Science**, *Cranfield University*, Cranfield, UK  
-Major: *Safety and Human Factors in Aviation*  
+- 2017: **MSc in Safety and Human Factors in Aviation**  
+*Cranfield University*, Cranfield, UK  
 [Master Thesis]({{ "/assets/pdfs/Master_Thesis-Le_Minh-Tam-Cranfield.pdf" | relative_url }})  
 
+
+or see my short [resume]({{ "/assets/pdfs/resume_short_en.pdf" | relative_url }}) (last updated 08/2019)
 
