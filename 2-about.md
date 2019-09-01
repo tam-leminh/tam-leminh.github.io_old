@@ -10,11 +10,13 @@ active: about
 
 ## Current
 
-- 2019-2020: **Master student in applied mathematics**, *University of Paris-Saclay*, Palaiseau, France
+- 2019-2020: **Master student in applied mathematics**  
+*University of Paris-Saclay*, Palaiseau, France
 
 ## Experience
 
-- 2017-2019: **Software Engineer**, *Thales Alenia Space*, Ditzingen, Germany
+- 2017-2019: **Software Engineer**  
+*Thales Alenia Space*, Ditzingen, Germany
 
 ## Education
 
@@ -26,5 +28,5 @@ active: about
 [Master Thesis]({{ "/assets/pdfs/Master_Thesis-Le_Minh-Tam-Cranfield.pdf" | relative_url }})  
 
 
-or see my short [resume]({{ "/assets/pdfs/resume_short_en.pdf" | relative_url }}) (last updated 08/2019)
+or see my short [resume]({{ "/assets/pdfs/resume_short_en.pdf" | relative_url }}) (last updated 09/2019)
 
