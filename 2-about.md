@@ -22,7 +22,7 @@ Short [resume]({{ "/assets/pdfs/resume_short_en.pdf" | relative_url }}) (last up
 
 ## Education
 
-- 2017: **MSc in Computer Science**  
+- 2017: **MSc in Aeronautical Engineering, with specialization in Computer Science**  
 *ISAE-SUPAERO*, Toulouse, France  
 
 - 2017: **MSc in Safety and Human Factors in Aviation**  
