@@ -4,7 +4,7 @@ layout: page
 title: "Projects"
 crawlertitle: "Projects - Tâm Le Minh"
 permalink: /projects/
-summary: "Some of my projects in Software or AI"
+summary: "From school and other personal projects"
 active: projects
 ---
 
