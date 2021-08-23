@@ -4,7 +4,7 @@ layout: page
 title: "About"
 crawlertitle: "About - Tâm Le Minh"
 permalink: /about/
-summary: "About this blog"
+summary: "About"
 active: about
 ---
 
@@ -12,8 +12,8 @@ Short [resume]({{ "/assets/pdfs/resume_short_en.pdf" | relative_url }}) (last up
 
 ## Current
 
-- 2019-2020: **Master student in applied mathematics**  
-*University of Paris-Saclay*, Palaiseau, France
+- 2020-2023: **Doctoral student in applied mathematics**  
+*MIA-Paris, University of Paris-Saclay*, Paris, France
 
 ## Experience
 
@@ -22,7 +22,10 @@ Short [resume]({{ "/assets/pdfs/resume_short_en.pdf" | relative_url }}) (last up
 
 ## Education
 
-- 2017: **MSc in Aeronautical Engineering, with specialization in Computer Science**  
+- 2019-2020: **MSc in applied mathematics**  
+*University of Paris-Saclay*, Palaiseau, France
+
+- 2017: **MSc in Computer Science**  
 *ISAE-SUPAERO*, Toulouse, France  
 
 - 2017: **MSc in Safety and Human Factors in Aviation**  
