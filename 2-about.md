@@ -8,6 +8,8 @@ summary: "About"
 active: about
 ---
 
+Short [resume]({{ "/assets/pdfs/resume_short_en.pdf" | relative_url }}) (last updated 09/2019)
+
 ## Current
 
 - 2020-2023: **Doctoral student in applied mathematics**  
@@ -30,6 +32,9 @@ active: about
 *Cranfield University*, Cranfield, UK  
 [Master Thesis]({{ "/assets/pdfs/Master_Thesis-Le_Minh-Tam-Cranfield.pdf" | relative_url }})  
 
+## Publication
 
-or see my short [resume]({{ "/assets/pdfs/resume_short_en.pdf" | relative_url }}) (last updated 09/2019)
+1. Li, W.-C., Zhang, J., Le Minh, T., Cao, J. and Wang, L. (2019). Visual scan patterns reflect to 
+human-computer interactions on processing different types of messages in the flight deck, *International 
+Journal of Industrial Ergonomics*, 72, 54-60, [\[URL\]]( https://doi.org/10.1016/j.ergon.2019.04.003 )
 
